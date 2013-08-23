@@ -1,11 +1,12 @@
 # from introduction to algorithms (cormen, leiserson and rivest) s12.3
 # simplified to work with fixed length strings
+require_relative "shingling.rb"
 
 HASH_SIZE ||= 64
 
 class UniversalHash	
 	M = (2**61)-1 # a largish prime
-	R = 3
+	R = N_GRAM_LEN
 	MAX_VALUE = 2**HASH_SIZE
 
 	def self.build		
@@ -25,6 +26,7 @@ class UniversalHash
 		raise "expects strings with length #{R}" unless string.length==R
 		value = 0
 		string.bytes.each_with_index do |char, index|
+			next if index >= @a.size 
 			value += (@a[index] * char) % M
 		end
 		value % MAX_VALUE

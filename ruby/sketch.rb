@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env jruby
 
 raise "usage: sketch.rb HASH_SIZE SKETCH_SIZE CUTOFF_RATIO" unless ARGV.length == 3
 
@@ -33,7 +33,7 @@ end
 sketches = Sketches.calculate_for document_shingles
 
 #puts "made sketches"
-#puts "sketches #{sketches.inspect}"
+# puts "sketches #{sketches.inspect}"
 
 # build < xid, di > list and convert into hash xi -> ids_of_those_with_xi
 x_to_i = {}
@@ -45,6 +45,8 @@ sketches.each_with_index do |s,i|
 end
 sketches = nil
 x_to_i.reject! { |k,v| v.size==1 } # a hash that went to only one doc is useless
+
+p x_to_i
 
 #puts "made x_to_i"
 #puts "x_to_i.keys.size = #{x_to_i.keys.size}"
@@ -81,7 +83,7 @@ x_to_i = nil
 
 in_common_cutoff = max_shingles_in_common / CUTOFF_RATIO
 
-#puts "shingles in common.size #{shingles_in_common.size} max=#{max_shingles_in_common}"
+puts "shingles in common.size #{shingles_in_common.size} max=#{max_shingles_in_common}"
 #shingles_in_common.keys.each { |k| puts "#{k} #{shingles_in_common[k].inspect}" }
 
 # convert from { id1=>{id2=>3, id3=>5}, id2=>{id3=>7}} to [ [id1,id2,3], [id1,id3,5], [id2,id3,7] ]
@@ -95,7 +97,7 @@ shingles_in_common.keys.each do |k1|
 end
 shingles_in_common = nil
 
-#puts "shingles_in_common_list.size #{shingles_in_common_list.size}"
+puts "shingles_in_common_list.size #{shingles_in_common_list.size}"
 
 # calc and display jaccard coeffs ignoring those below cutoff
 shingles_in_common_list.each do |ids_count|
