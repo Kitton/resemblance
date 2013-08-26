@@ -1,6 +1,6 @@
 require 'set'
 
-N_GRAM_LEN = 3
+# N_GRAM_LEN = 3
 
 class String
 
