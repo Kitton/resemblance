@@ -46,8 +46,6 @@ end
 sketches = nil
 x_to_i.reject! { |k,v| v.size==1 } # a hash that went to only one doc is useless
 
-p x_to_i
-
 #puts "made x_to_i"
 #puts "x_to_i.keys.size = #{x_to_i.keys.size}"
 #puts "x_to_i.values.sizes = #{x_to_i.collect{|k,v| v.size}}"
