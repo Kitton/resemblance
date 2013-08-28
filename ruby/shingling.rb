@@ -7,11 +7,16 @@ class String
 	def shingles
 		return @cached if @cached	
 		n_grams = Set.new
-		(length-N_GRAM_LEN+1).times do |i| 
-			n_grams << slice(i, N_GRAM_LEN) 
+		# (length-N_GRAM_LEN+1).times do |i| 
+		(self.count(" ") + 1 - N_GRAM_LEN + 1).times do |i| 
+			n_grams << self.split[i...i+N_GRAM_LEN].join(' ')
+			# n_grams << slice(i, N_GRAM_LEN) 
 		end	
     @cached = n_grams
 		n_grams
+		# p n_grams
+		# p self
+		# abort
 	end
 
 	def jaccard_similarity_coeff(b)
