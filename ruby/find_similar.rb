@@ -1,4 +1,6 @@
-#!/usr/bin/env jruby
+#!/usr/bin/env ruby
+# encoding: utf-8
+
 raise "usage: find_similar.rb SIMILARITY_PERCENTAGE=[0..1]" unless ARGV.length == 1
 SIMILARITY_PERCENTAGE = ARGV[0].to_f
 
@@ -32,8 +34,10 @@ document_shingles = documents.collect do |id_text|
 end
 
 sketches = Sketches.calculate_for document_shingles
+# sketches = Sketches.calculate_for_all document_shingles
 sketches = sketches.collect{|s| s.sketch}
 sketches.flatten!
+p "sketches.size = #{sketches.size}"
 
 coll = db["Sketches"]
 
@@ -41,10 +45,14 @@ similar_docs = {}
 similar_docs.default = 0
 
 sketches.each do |s|
-	coll.find_one("_id" => s)["doc_ids"].each {|e| similar_docs[e] += 1}
+	doc = coll.find_one("sketch" => s.to_s)
+	next if doc.nil?
+	doc["doc_ids"].each {|e| similar_docs[e] += 1}
 end
 
 p similar_docs
 near_duplicates = []
+SKETCH_SIZE = similar_docs.values.max
 similar_docs.each {|k,v| near_duplicates << k if v >= SKETCH_SIZE*SIMILARITY_PERCENTAGE}
 p near_duplicates
+p near_duplicates.size
