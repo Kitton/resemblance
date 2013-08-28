@@ -25,6 +25,7 @@ document_ids = [] # mapping from idx in arrays to document id read from data fil
 document_shingles = documents.collect do |id_text|
 	id,text = id_text
 	document_ids << id
+	text.shingles
 end
 
 puts "Shingles are created"

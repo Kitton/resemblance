@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # encoding: utf-8
 
-FILENAME = "./top_cookies_plus.txt"
+FILENAME = "./top_cookies.txt"
 
 require 'mongo'
 include Mongo
@@ -23,7 +23,8 @@ if __FILE__ == $0
 				next if row["browser"].nil?
 				plugin_string = row["browser"]["plugins"].collect {|plugin| plugin.values.join}
 				plugin_string = plugin_string.join(" ").gsub(/"/, "")
-				file.puts "#{cntr} | #{row["user_cookie"]} | #{plugin_string}"
+				# file.puts "#{cntr} | #{row["user_cookie"]} | #{plugin_string}"
+				file.puts "#{cntr} | #{plugin_string}"
 				cntr += 1
 			end
 		end
