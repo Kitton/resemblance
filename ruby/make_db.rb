@@ -1,4 +1,5 @@
-#!/usr/bin/env jruby
+#!/usr/bin/env ruby
+# encoding: utf-8
 
 raise "usage: make_db.rb SKETCH_SIZE N_GRAM_LEN" unless ARGV.length == 2
 
@@ -24,7 +25,6 @@ document_ids = [] # mapping from idx in arrays to document id read from data fil
 document_shingles = documents.collect do |id_text|
 	id,text = id_text
 	document_ids << id
-	text.shingles
 end
 
 puts "Shingles are created"
@@ -35,6 +35,7 @@ puts "Sketches are calculated"
 # build < xid, di > list and convert into hash xi -> ids_of_those_with_xi
 x_to_i = {}
 sketches.each_with_index do |s,i|
+	p s.inspect if s.sketch.nil?
 	s.sketch.each do |sk|
 		x_to_i[sk] ||= Set.new
 		x_to_i[sk] << i
@@ -60,6 +61,6 @@ puts "Documents are inserted"
 
 coll = db["Sketches"]
 x_to_i.each do |sketch, doc_ids|
-	doc = {"_id" => sketch, "doc_ids" => doc_ids.to_a}
+	doc = {"sketch" => sketch.to_s, "doc_ids" => doc_ids.to_a}
 	coll.insert(doc)
 end

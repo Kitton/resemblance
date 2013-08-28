@@ -22,7 +22,7 @@ if __FILE__ == $0
 			cursor.each do |row|
 				next if row["browser"].nil?
 				plugin_string = row["browser"]["plugins"].collect {|plugin| plugin.values.join}
-				plugin_string = plugin_string.join().gsub(/"/, "")
+				plugin_string = plugin_string.join(" ").gsub(/"/, "")
 				file.puts "#{cntr} | #{row["user_cookie"]} | #{plugin_string}"
 				cntr += 1
 			end
