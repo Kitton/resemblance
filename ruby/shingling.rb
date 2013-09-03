@@ -1,16 +1,21 @@
 require 'set'
 
 # N_GRAM_LEN = 3
+MODE_WORDS = true
 
 class String
 
 	def shingles
 		return @cached if @cached	
 		n_grams = Set.new
-		# (length-N_GRAM_LEN+1).times do |i| 
-		(self.count(" ") + 1 - N_GRAM_LEN + 1).times do |i| 
-			n_grams << self.split[i...i+N_GRAM_LEN].join(' ')
-			# n_grams << slice(i, N_GRAM_LEN) 
+		if MODE_WORDS
+			(self.count(" ") + 1 - N_GRAM_LEN + 1).times do |i| 
+				n_grams << self.split[i...i+N_GRAM_LEN].join(' ')
+			end
+		else
+			(length-N_GRAM_LEN+1).times do |i| 
+				n_grams << slice(i, N_GRAM_LEN) 
+			end
 		end	
     @cached = n_grams
 		n_grams

@@ -6,20 +6,24 @@ SAMPLE = "Shockwave FlashShockwave Flash 11.5 r31application/x-shockwave-flash,s
 cntr = 0
 N = SAMPLE.size
 REPLACE_SYMBOL = "!"
+FILE_NAME = "./syntetic_text_only.txt"
 
-File.open("./syntetic.txt", 'w') do |file|
-	file.puts "#{cntr}|#{SAMPLE}"
+File.open(FILE_NAME, 'w') do |file|
+	# file.puts "#{cntr}|#{SAMPLE}"
+	file.puts "#{SAMPLE}"
 	cntr += 1
 
 	#cut off
 	N.times do |i|  
-		file.puts"#{cntr}|#{SAMPLE[i..-1]}"
+		# file.puts"#{cntr}|#{SAMPLE[i..-1]}"
+		file.puts"#{SAMPLE[i..-1]}"
 		cntr += 1
 	end
 
 	#Replace
 	N.times do |i|  
-		file.puts"#{cntr}|#{REPLACE_SYMBOL*i + SAMPLE[i..-1]}"
+		# file.puts"#{cntr}|#{REPLACE_SYMBOL*i + SAMPLE[i..-1]}"
+		file.puts"#{REPLACE_SYMBOL*i + SAMPLE[i..-1]}"
 		cntr += 1
 	end
 
