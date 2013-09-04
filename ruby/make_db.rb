@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 # encoding: utf-8
-
-raise "usage: make_db.rb SKETCH_SIZE N_GRAM_LEN" unless ARGV.length == 2
+raise "usage: make_db.rb SKETCH_SIZE N_GRAM_LEN SHINGLE_MODE(-w/-c)" unless ARGV.length == 3 and (ARGV[2].to_s == "-w" or ARGV[2].to_s == "-c")
 
 SKETCH_SIZE = ARGV[0].to_i
 N_GRAM_LEN = ARGV[1].to_i
+SHINGLE_MODE = ARGV[2].to_s
 
 require 'set'
 require 'mongo'
@@ -39,7 +39,7 @@ sketches.each_with_index do |s,i|
 	p s.inspect if s.sketch.nil?
 	s.sketch.each do |sk|
 		x_to_i[sk] ||= Set.new
-		x_to_i[sk] << i
+		x_to_i[sk] << document_ids[i]
 	end
 end
 

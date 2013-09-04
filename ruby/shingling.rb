@@ -1,27 +1,27 @@
 require 'set'
 
 # N_GRAM_LEN = 3
-MODE_WORDS = true
+# MODE_WORDS = true
 
 class String
 
 	def shingles
 		return @cached if @cached	
+		squeezed = self.squeeze(" ")
 		n_grams = Set.new
-		if MODE_WORDS
-			(self.count(" ") + 1 - N_GRAM_LEN + 1).times do |i| 
-				n_grams << self.split[i...i+N_GRAM_LEN].join(' ')
+		if SHINGLE_MODE == "-w"
+			(squeezed.count(" ") - N_GRAM_LEN + 2).times do |i| 
+				n_grams << squeezed.split[i...i+N_GRAM_LEN].join(' ')
 			end
-		else
+		elsif SHINGLE_MODE == "-c"
 			(length-N_GRAM_LEN+1).times do |i| 
 				n_grams << slice(i, N_GRAM_LEN) 
 			end
+		else
+			raise "Wrong SHINGLE_MODE : #{SHINGLE_MODE}"
 		end	
-    @cached = n_grams
+	    @cached = n_grams
 		n_grams
-		# p n_grams
-		# p self
-		# abort
 	end
 
 	def jaccard_similarity_coeff(b)
