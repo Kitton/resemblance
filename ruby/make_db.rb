@@ -21,6 +21,8 @@ end
 
 documents = read_data
 
+puts "documents are read"
+
 document_ids = [] # mapping from idx in arrays to document id read from data file
 document_shingles = documents.collect do |id_text|
 	id,text = id_text
@@ -48,7 +50,7 @@ db = MongoClient.new.db("Sketching")
 
 #Save Parameters
 coll = db["Parameters"]
-doc = {"SKETCH_SIZE" => SKETCH_SIZE, "N_GRAM_LEN" =>N_GRAM_LEN}
+doc = {"SKETCH_SIZE" => SKETCH_SIZE, "N_GRAM_LEN" =>N_GRAM_LEN, "SHINGLE_MODE" => SHINGLE_MODE}
 coll.insert(doc)
 
 coll = db["Documents"]

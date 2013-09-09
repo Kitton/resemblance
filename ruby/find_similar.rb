@@ -11,6 +11,8 @@ include Mongo
 require File.dirname(__FILE__)+'/read_data'
 require File.dirname(__FILE__)+'/sketching'
 require File.dirname(__FILE__)+'/shingling'
+require File.dirname(__FILE__)+'/calc_dist'
+
 
 alias _puts puts
 def puts msg
@@ -21,15 +23,17 @@ db = MongoClient.new.db("Sketching")
 
 coll = db["Parameters"]
 parameters = coll.find_one()
+p "parameters = #{parameters}"
 SKETCH_SIZE = parameters["SKETCH_SIZE"]
 N_GRAM_LEN = parameters["N_GRAM_LEN"]
+SHINGLE_MODE = parameters["SHINGLE_MODE"]
 
 documents = read_data
 
-document_ids = [] # mapping from idx in arrays to document id read from data file
+searched_id = -1
 document_shingles = documents.collect do |id_text|
 	id,text = id_text
-	document_ids << id
+	searched_id = id
 	text.shingles
 end
 
@@ -50,9 +54,18 @@ sketches.each do |s|
 	doc["doc_ids"].each {|e| similar_docs[e] += 1}
 end
 
-p similar_docs
+p similar_docs.sort_by {|_key, value| value}
 near_duplicates = []
 SKETCH_SIZE = similar_docs.values.max
 similar_docs.each {|k,v| near_duplicates << k if v >= SKETCH_SIZE*SIMILARITY_PERCENTAGE}
 p near_duplicates
 p near_duplicates.size
+
+coll = db["Documents"]
+near_duplicates.each do |id|
+	doc = coll.find_one("_id" => id)
+	next if doc.nil?
+	p doc
+end
+
+# calc_dist(searched_id, near_duplicates)
