@@ -31,8 +31,7 @@ SHINGLE_MODE = parameters["SHINGLE_MODE"]
 documents = read_data
 
 searched_id = -1
-document_shingles = documents.collect do |id_text|
-	id,text = id_text
+document_shingles = documents.collect do |id,text|
 	searched_id = id
 	text.shingles
 end
@@ -54,12 +53,11 @@ sketches.each do |s|
 	doc["doc_ids"].each {|e| similar_docs[e] += 1}
 end
 
-p similar_docs.sort_by {|_key, value| value}
+# p similar_docs.sort_by {|_key, value| value}
 near_duplicates = []
-SKETCH_SIZE = similar_docs.values.max
-similar_docs.each {|k,v| near_duplicates << k if v >= SKETCH_SIZE*SIMILARITY_PERCENTAGE}
-p near_duplicates
-p near_duplicates.size
+MAX_SIMILARITY = similar_docs.values.max
+similar_docs.each {|k,v| near_duplicates << k if v >= MAX_SIMILARITY*SIMILARITY_PERCENTAGE}
+p "MAX_SIMILARITY = #{MAX_SIMILARITY} from #{SKETCH_SIZE}"
 
 coll = db["Documents"]
 near_duplicates.each do |id|

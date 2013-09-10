@@ -4,6 +4,7 @@ require 'murmurhash3'
 # require 'digest/sha1'
 require 'zlib'
 require 'cityhash'
+# require 'ap'
 
 class Sketch
 	attr_reader :sketch
@@ -19,15 +20,21 @@ class Sketch
 		# @sketch = hashed_shingles.sort[-SKETCH_SIZE..-1]
 		@sketch = hashed_shingles.sort[0...SKETCH_SIZE]
 
+		# sketch_shingles = {}
+		# @elems.each { |elem| sketch_shingles[CityHash.hash64(elem)] = elem}
+		# p "Selected hashes : "
+		# ap @sketch.each.collect {|e| sketch_shingles[e]}
+
 		# @sketch << @elems.each.collect { |elem| MurmurHash3::V32.str_hash elem}.sort[0...SKETCH_SIZE]
 		# @sketch.flatten!
 
 		@sketch = hashed_shingles if hashed_shingles.size <= SKETCH_SIZE
+		@sketch
 	end
 
 	def get_all_hashed_shingles
-		@sketch = @elems.each.collect { |elem| CityHash.hash64 elem }
-		# @sketch = @elems.each.collect { |elem| MurmurHash3::V32.str_hash elem}
+		# @sketch = @elems.each.collect { |elem| CityHash.hash64 elem }
+		@sketch = @elems.each.collect { |elem| MurmurHash3::V32.str_hash elem}
 		@sketch
 		# hashed_shingles = @elems.each.collect { |elem| Digest::SHA1.hexdigest(elem).to_i(16)}
 		# hashed_shingles = @elems.each.collect { |elem|Zlib::crc32 elem}
