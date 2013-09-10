@@ -1,24 +1,21 @@
 require 'set'
 
-# N_GRAM_LEN = 3
-# MODE_WORDS = true
-
 class String
 
-	def shingles
+	def shingles (shingle_mode, n_gram_len)
 		return @cached if @cached	
 		squeezed = self.squeeze(" ")
 		n_grams = Set.new
-		if SHINGLE_MODE == "-w"
-			(squeezed.count(" ") - N_GRAM_LEN + 2).times do |i| 
-				n_grams << squeezed.split[i...i+N_GRAM_LEN].join(' ')
+		if shingle_mode == "-w"
+			(squeezed.count(" ") - n_gram_len + 2).times do |i| 
+				n_grams << squeezed.split[i...i+n_gram_len].join(' ')
 			end
-		elsif SHINGLE_MODE == "-c"
-			(length-N_GRAM_LEN+1).times do |i| 
-				n_grams << slice(i, N_GRAM_LEN) 
+		elsif shingle_mode == "-c"
+			(length - n_gram_len + 1).times do |i| 
+				n_grams << slice(i, n_gram_len) 
 			end
 		else
-			raise "Wrong SHINGLE_MODE : #{SHINGLE_MODE}"
+			raise "Wrong shingle_mode : #{shingle_mode}"
 		end	
 	    @cached = n_grams
 		n_grams

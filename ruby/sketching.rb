@@ -14,11 +14,11 @@ class Sketch
 		@sketch = []
 	end
 
-	def apply_hash 
+	def apply_hash sketch_size
 		hashed_shingles = get_all_hashed_shingles
 		# SKETCH_SIZE.times { @sketch << hashed_shingles[rand(hashed_shingles.size)] }
 		# @sketch = hashed_shingles.sort[-SKETCH_SIZE..-1]
-		@sketch = hashed_shingles.sort[0...SKETCH_SIZE]
+		@sketch = hashed_shingles.sort[0...sketch_size]
 
 		# sketch_shingles = {}
 		# @elems.each { |elem| sketch_shingles[CityHash.hash64(elem)] = elem}
@@ -28,7 +28,7 @@ class Sketch
 		# @sketch << @elems.each.collect { |elem| MurmurHash3::V32.str_hash elem}.sort[0...SKETCH_SIZE]
 		# @sketch.flatten!
 
-		@sketch = hashed_shingles if hashed_shingles.size <= SKETCH_SIZE
+		@sketch = hashed_shingles if hashed_shingles.size <= sketch_size
 		@sketch
 	end
 
@@ -47,9 +47,9 @@ end
 
 class Sketches
 	
-	def self.calculate_for elems
+	def self.calculate_for(elems, sketch_size)
 		sketches = elems.reject{ |e| e.empty? }.collect { |e| Sketch.new(e)  }
-		sketches.each { |s| s.apply_hash }
+		sketches.each { |s| s.apply_hash(sketch_size) }
 
 		# SKETCH_SIZE.times do 
 		# 	hash_fn = UniversalHash.build
