@@ -10,9 +10,7 @@ class String
 		)
 	end
 
-		
 	def shingles(shingle_mode, n_gram_len)
-		return @cached if @cached	
 		squeezed = self.squeeze(" ")
 		squeezed = squeezed.get_rid_of_accents
 		n_grams = Set.new
@@ -27,7 +25,6 @@ class String
 		else
 			raise "Wrong shingle_mode : #{shingle_mode}"
 		end	
-	    @cached = n_grams
 		n_grams
 	end
 
@@ -50,11 +47,6 @@ class String
 		end
 		xor.to_f / (xor+union)
 	end
-
-	def invalidate_cache
-		@cached = nil
-	end
-
 end
 
 
