@@ -1,18 +1,28 @@
+# encoding: utf-8
 require 'set'
 
 class String
 
-	def shingles (shingle_mode, n_gram_len)
+	def get_rid_of_accents
+		return self.tr(
+			"ÀÁÂÃÄÅàáâãäåĀāĂăĄąÇçĆćĈĉĊċČčÐðĎďĐđÈÉÊËèéêëĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħÌÍÎÏìíîïĨĩĪīĬĭĮįİıĴĵĶķĸĹĺĻļĽľĿŀŁłÑñŃńŅņŇňŉŊŋÒÓÔÕÖØòóôõöøŌōŎŏŐőŔŕŖŗŘřŚśŜŝŞşŠšſŢţŤťŦŧÙÚÛÜùúûüŨũŪūŬŭŮůŰűŲųŴŵÝýÿŶŷŸŹźŻżŽž",
+			"AAAAAAaaaaaaAaAaAaCcCcCcCcCcDdDdDdEEEEeeeeEeEeEeEeEeGgGgGgGgHhHhIIIIiiiiIiIiIiIiIiJjKkkLlLlLlLlLlNnNnNnNnnNnOOOOOOooooooOoOoOoRrRrRrSsSsSsSssTtTtTtUUUUuuuuUuUuUuUuUuUuWwYyyYyYZzZzZz"
+		)
+	end
+
+		
+	def shingles(shingle_mode, n_gram_len)
 		return @cached if @cached	
 		squeezed = self.squeeze(" ")
+		squeezed = squeezed.get_rid_of_accents
 		n_grams = Set.new
 		if shingle_mode == "-w"
 			(squeezed.count(" ") - n_gram_len + 2).times do |i| 
 				n_grams << squeezed.split[i...i+n_gram_len].join(' ')
 			end
 		elsif shingle_mode == "-c"
-			(length - n_gram_len + 1).times do |i| 
-				n_grams << slice(i, n_gram_len) 
+			(squeezed.length - n_gram_len + 1).times do |i| 
+				n_grams << squeezed.slice(i, n_gram_len) 
 			end
 		else
 			raise "Wrong shingle_mode : #{shingle_mode}"
