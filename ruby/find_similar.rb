@@ -5,11 +5,9 @@ require 'set'
 require 'mongo'
 include Mongo
 
-require File.dirname(__FILE__)+'/read_data'
 require File.dirname(__FILE__)+'/sketching'
 require File.dirname(__FILE__)+'/shingling'
 require File.dirname(__FILE__)+'/calc_dist'
-
 
 alias _puts puts
 def puts msg
@@ -49,17 +47,19 @@ def find_similar searched_text, similarity_percentage
 	# p similar_docs.sort_by {|_key, value| value}
 	near_duplicates = []
 	max_similarity = similar_docs.values.max
-	similar_docs.each {|k,v| near_duplicates << k if v >= max_similarity*similarity_percentage}
+	similar_docs.each {|k,v| near_duplicates << [k,v] if v >= max_similarity*similarity_percentage}
 	p "max_similarity = #{max_similarity} from #{sketch_size}"
 
 	coll = db["Documents"]
-	near_duplicates.each do |id|
+	results = []
+	near_duplicates.each do |id, same_shingles|
 		doc = coll.find_one("_id" => id)
 		next if doc.nil?
-		p doc
+		results << doc["Doc_text"]
+		p "#{same_shingles}/#{max_similarity} | #{doc["Doc_text"]}"
 	end
-
 	# calc_dist(searched_id, near_duplicates)
+	results
 end
 
 if __FILE__ == $0
