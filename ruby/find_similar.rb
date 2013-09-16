@@ -55,8 +55,8 @@ def find_similar searched_text, similarity_percentage
 	near_duplicates.each do |id, same_shingles|
 		doc = coll.find_one("_id" => id)
 		next if doc.nil?
-		results << doc["Doc_text"]
-		p "#{same_shingles}/#{max_similarity} | #{doc["Doc_text"]}"
+		results << doc["addr"]
+		p "#{same_shingles}/#{max_similarity} | #{doc}"
 	end
 	# calc_dist(searched_id, near_duplicates)
 	results

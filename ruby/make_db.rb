@@ -30,18 +30,21 @@ puts "documents are read"
 
 # coll = db["Documents"]
 # coll.remove
-# documents.each do |id, text|
-# 	doc = {"_id" => id, "Doc_text" => text}
+# documents.each do |id, e|
+# 	doc = e
+# 	doc["_id"] = id
 # 	coll.insert(doc)
 # end
 # puts "Docs are inserted"
+# abort
 
 coll = db["Sketches"]
 coll.remove
 coll.create_index("sketch")
 
-documents.each do |id, text|
-	puts id if ( (id % 2000) == 0)
+documents.each do |id, e|
+	puts id if ( (id % 10000) == 0)
+	text = e["addr"]
 	doc_shingles = text.shingles(SHINGLE_MODE, N_GRAM_LEN)
 	sketches = Sketch.new(doc_shingles).apply_hash(SKETCH_SIZE)
 	sketches.each do |sk|
